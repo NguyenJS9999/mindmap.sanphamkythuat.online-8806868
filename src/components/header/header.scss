@@ -1,0 +1,84 @@
+
+$main-color: #4F46E5;
+$bg-main-color: #4338CA50;
+
+.header-component {
+	// border-bottom: 1px solid rgb(206, 200, 200);
+	width: 100%;
+	padding: 0 4%;
+
+	height: 80px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 20px;
+}
+
+.header-logo {
+	font-size: 22px;
+	user-select: none;
+	text-decoration: none;
+	color: $main-color;
+	font-weight: 600;
+	font-size: 30px;
+}
+
+.header-right {
+	flex: 1;
+}
+
+.header-menu-tabs {
+	user-select: none;
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	flex: 1;
+
+	&>a {
+		padding: 0.5rem 1rem;
+		text-decoration: none;
+		color: $main-color;
+		user-select: none;
+	}
+}
+
+.header-auth {
+	// border: 1px solid red;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+
+	&>a {
+		padding: 0.5rem 1rem;
+		text-decoration: none;
+		color: $main-color;
+	}
+}
+.active {
+	border: 1px solid $main-color;
+	border-radius: 0.25rem;
+	background: #fff;
+	color: $main-color;
+	padding: 0.5rem 1rem;
+	font-weight: 400;
+	font-size: 20px;
+}
+.active-hover {
+	border: 1px solid transparent;
+	border-radius: 0.25rem;
+	transition: all 0.2s ease-in-out;
+	padding: 0.5rem 1rem;
+	font-weight: 400;
+	font-size: 20px;
+	color: $main-color;
+
+	&:hover {
+		// border: 1px solid $main-color;
+		background: $bg-main-color;
+	}
+}
+.btn-logout {
+	padding: 1rem;
+	border: $main-color;
+}

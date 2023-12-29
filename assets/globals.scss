@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+
+  &>div {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+
+    &>div:nth-child(3) {
+      // border: 1px solid blue;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      // padding: 0 8%;
+    }
+  }
+}
+
+html *::-webkit-scrollbar {
+  border-radius: 0;
+  width: 0.6rem;
+
+}
+
+html *::-webkit-scrollbar-thumb {
+  border-radius: 0.3rem;
+  background-color: #d0d0d0;
+
+  &:hover {
+    background-color: #a0a0a0;
+  }
+}
+
+html *::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: #f9f9f9;
+}
+
+.wide {
+  width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: calc(100% - 48px);
+}
+
+.banner {
+  margin-top: 5rem;
+  background: url(https://ak-d.tripcdn.com/images/100i12000000t464t9CFA.jpg) right top / cover no-repeat;
+  width: 100vw;
+  height: 300px;
+}
+
+.nav-link {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.nav-link .active {
+  color: #eab308;
+}
+
+.btn {
+  background-color: #eab308;
+  color: #fff;
+  height: 44px;
+  padding: 4px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn:hover {
+  background-color: #a57f0c;
+}
+
+.checkout {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgb(251, 251, 252);
+  background-attachment: scroll;
+  background-image: url("https://images.ctfassets.net/sdx4pteldsvw/3fslaRA5PCUGKEqe0W335Q/ace4cdd8dbbf5c955c063fa090545d88/landing-hero.jpg?fit=fill&f=center&fm=webp&w=1280&q=90");
+}
+
+.heading-2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+button {
+  user-select: none;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    opacity: 0.7;
+  }
+}
+

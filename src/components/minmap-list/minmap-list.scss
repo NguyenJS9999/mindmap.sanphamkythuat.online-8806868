@@ -1,0 +1,28 @@
+
+.mindmap-list-component {
+	width: 100%;
+	height: 100%;
+}
+
+.mindmap-list-table {
+	margin-top: 1rem;
+	// border: 1px solid $main-color;
+	border-radius: 0.55rem;
+	user-select: none;
+}
+
+.mindmap-item {
+	background: red;
+	cursor: pointer;
+
+	&:hover {
+		background: rgb(131, 136, 145);
+	}
+}
+
+.create-mindmap {
+	& a {
+		color: white;
+		text-decoration: none;
+	}
+}
