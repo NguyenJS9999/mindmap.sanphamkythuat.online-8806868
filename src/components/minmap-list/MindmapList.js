@@ -43,20 +43,25 @@ function MindmapListComponent({ session }) {
     },
   ];
 
+  useLayoutEffect(() => {
+    getMindmaps();
+    getUsers();
+  }, []);
+
 	const [ loaddding, setDidLogin ] = useState(true);
 
   async function createMindMap() {
     const randomMindMapId = uuidv4();
-    // console.log('randomMindMapId', randomMindMapId);
+    console.log('randomMindMapId', randomMindMapId);
     if (randomMindMapId) {
-      router.push(`/my-mindmap/${randomMindMapId}`);
+      // router.push(`/my-mindmap/${randomMindMapId}`);
       // redirect(`/my-mindmap/${randomMindMapId}`);
-      const dataCreateMindmap = {
-        id: randomMindMapId,
-        auth: false
-      }
+      // const dataCreateMindmap = {
+      //   id: randomMindMapId,
+      //   auth: false
+      // }
       // API crate
-
+      putMindMap(randomMindMapId)
     }
   };
 
@@ -64,21 +69,23 @@ function MindmapListComponent({ session }) {
     console.log('handleEditMindmap', id);
     router.push(`/my-mindmap/${id}`);
   }
-  function handleDelelteMindmap(id) {
+  async function handleDelelteMindmap(id) {
     console.log('handleDelelteMindmap', id);
-    setIdRemove(id);
+    // setIdRemove(id);
+    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
+      method: 'DELETE',
+    });
+    console.log('Delete users response', response);
+    if (response) {
+      getMindmaps();
+    }
   }
 
-  // const getUsers = async () => {
-  //   const res = await fetch(`https://f86wpp-8080.csb.app/users`);
-  //   const users = await res.json();
-  //   console.log(users);
-  // }
-  // getUsers()
-
-  useLayoutEffect(() => {
-    getMindmaps();
-  }, []);
+  const getUsers = async () => {
+    const res = await fetch(`https://f86wpp-8080.csb.app/users`);
+    const users = await res.json();
+    console.log(users);
+  }
 
   const getMindmaps = async () => {
     const res = await fetch(`https://f86wpp-8080.csb.app/mindmaps`);
@@ -87,7 +94,49 @@ function MindmapListComponent({ session }) {
     if (res) {
       setMindmapList(dataParsed);
     }
+  }
 
+  async function postUser() {
+    const response = await fetch(`https://f86wpp-8080.csb.app/users`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+         name: 'Name 3'
+        }),
+      }
+    );
+    // const data = await response.json();
+    console.log('postUser response', response);
+  }
+
+  async function putMindMap(randomMindMapId) {
+      const randomNum = Math.floor(Math.random() * ((100) - (1) + 1)) + (1);
+      const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `Mindmap ${randomNum}`,
+          description: `Mô tả Mindmap ${randomNum}`,
+          id: randomMindMapId,
+          create_at: `28/04/202 ${randomNum} 09:0 ${randomNum}:1${randomNum}`,
+          // map: {
+          //   nodes: [],
+          //   edges: [],
+          // }
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log('putMindMap res', data);
+    if (response) {
+      getMindmaps();
+    }
   }
 
 	return (
@@ -102,6 +151,9 @@ function MindmapListComponent({ session }) {
           Thêm mới
         </button>
 
+        <button onClick={postUser} type="button" class="btn btn-primary create-mindmap ml-2">
+          Thêm mới 1 mindmap
+        </button>
 
         <table class="table mindmap-list-table">
           <thead>
