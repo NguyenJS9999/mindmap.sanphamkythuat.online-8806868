@@ -45,7 +45,6 @@ function MindmapListComponent({ session }) {
 
   useLayoutEffect(() => {
     getMindmaps();
-    getUsers();
   }, []);
 
 	const [ loaddding, setDidLogin ] = useState(true);
@@ -65,6 +64,10 @@ function MindmapListComponent({ session }) {
     }
   };
 
+  function saveNode() {
+    console.log('saveNode');
+  }
+
   function handleEditMindmap(id) {
     console.log('handleEditMindmap', id);
     router.push(`/my-mindmap/${id}`);
@@ -81,36 +84,37 @@ function MindmapListComponent({ session }) {
     }
   }
 
-  const getUsers = async () => {
-    const res = await fetch(`https://f86wpp-8080.csb.app/users`);
-    const users = await res.json();
-    console.log(users);
-  }
+  // const getUsers = async () => {
+  //   const res = await fetch(`https://f86wpp-8080.csb.app/users`);
+  //   const users = await res.json();
+  //   console.log(users);
+  // }
 
   const getMindmaps = async () => {
     const res = await fetch(`https://f86wpp-8080.csb.app/mindmaps`);
     const dataParsed = await res.json();
-    console.log('dataParsed', dataParsed);
+    // console.log('dataParsed', dataParsed);
     if (res) {
       setMindmapList(dataParsed);
     }
   }
 
-  async function postUser() {
-    const response = await fetch(`https://f86wpp-8080.csb.app/users`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-         name: 'Name 3'
-        }),
-      }
-    );
-    // const data = await response.json();
-    console.log('postUser response', response);
-  }
+  // async function postUser() {
+  //   const response = await fetch(`https://f86wpp-8080.csb.app/users`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //        name: 'Name 3'
+  //       }),
+  //     }
+  //   );
+  //   // const data = await response.json();
+  //   console.log('postUser response', response);
+  // }
+
 
   async function putMindMap(randomMindMapId) {
       const randomNum = Math.floor(Math.random() * ((100) - (1) + 1)) + (1);
@@ -124,7 +128,7 @@ function MindmapListComponent({ session }) {
           name: `Mindmap ${randomNum}`,
           description: `Mô tả Mindmap ${randomNum}`,
           id: randomMindMapId,
-          create_at: `28/04/202 ${randomNum} 09:0 ${randomNum}:1${randomNum}`,
+          create_at: `2${randomNum}/04/202${randomNum} 09:0${randomNum}:1${randomNum}`,
           // map: {
           //   nodes: [],
           //   edges: [],
@@ -133,7 +137,7 @@ function MindmapListComponent({ session }) {
       }
     );
     const data = await response.json();
-    console.log('putMindMap res', data);
+    // console.log('putMindMap res', data);
     if (response) {
       getMindmaps();
     }
@@ -149,10 +153,6 @@ function MindmapListComponent({ session }) {
         <button onClick={createMindMap} type="button" class="btn btn-primary create-mindmap">
           {/* <Link href={`/my-mindmap/0`} >Thêm mới</Link> */}
           Thêm mới
-        </button>
-
-        <button onClick={postUser} type="button" class="btn btn-primary create-mindmap ml-2">
-          Thêm mới 1 mindmap
         </button>
 
         <table class="table mindmap-list-table">
