@@ -1,7 +1,7 @@
 "use client"
 
 import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react';
-import './minmap-list.scss';
+import moment from 'moment';
 import Link from 'next/link';
 // import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Loading from '~/components/Loading';
 import ModalConfirmDelete from '~/components/ModalConfirmDelete';
 import { getMindmaps } from '~/services/apiMindmap';
+import './minmap-list.scss';
 
 
 const api = process.env.NEXT_PUBLIC_API;
@@ -22,8 +23,6 @@ function MindmapListComponent({ session }) {
   const [dataMaps, setDataMaps] = useState([]);
   const [idRemove, setIdRemove] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
-
-
 
 
   const router = useRouter();
@@ -74,14 +73,15 @@ function MindmapListComponent({ session }) {
   }
   async function handleDelelteMindmap(id) {
     console.log('handleDelelteMindmap', id);
-    // setIdRemove(id);
-    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
-      method: 'DELETE',
-    });
-    console.log('Delete users response', response);
-    if (response) {
-      getMindmaps();
-    }
+    setShowConfirm(true);
+    setIdRemove(id);
+    // const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
+    //   method: 'DELETE',
+    // });
+    // console.log('Delete users response', response);
+    // if (response) {
+    //   getMindmaps();
+    // }
   }
 
   // const getUsers = async () => {
@@ -91,10 +91,10 @@ function MindmapListComponent({ session }) {
   // }
 
   const getMindmaps = async () => {
-    const res = await fetch(`https://f86wpp-8080.csb.app/mindmaps`);
-    const dataParsed = await res.json();
-    // console.log('dataParsed', dataParsed);
-    if (res) {
+    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps`);
+    const dataParsed = await response.json();
+    if (response) {
+      console.log('getMindmaps: ', dataParsed);
       setMindmapList(dataParsed);
     }
   }
@@ -118,6 +118,9 @@ function MindmapListComponent({ session }) {
 
   async function putMindMap(randomMindMapId) {
       const randomNum = Math.floor(Math.random() * ((100) - (1) + 1)) + (1);
+      const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+      console.log('putMindMap currentTime: ', currentTime);
+
       const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps`,
       {
         method: "POST",
@@ -128,14 +131,15 @@ function MindmapListComponent({ session }) {
           name: `Mindmap ${randomNum}`,
           description: `Mô tả Mindmap ${randomNum}`,
           id: randomMindMapId,
-          create_at: `2${randomNum}/04/202${randomNum} 09:0${randomNum}:1${randomNum}`,
-          // map: {
-          //   nodes: [],
-          //   edges: [],
-          // }
+          createdAt: currentTime,
+          map: {
+            nodes: [],
+            edges: [],
+          }
         }),
       }
     );
+
     const data = await response.json();
     // console.log('putMindMap res', data);
     if (response) {
@@ -182,7 +186,7 @@ function MindmapListComponent({ session }) {
                         <div>{item?.description}</div>
                       </div>
                     </td>
-                    <td>{item?.create_at}</td>
+                    <td>{item?.createdAt}</td>
                     <td>
                       <button onClick={() => handleEditMindmap(item?.id)}>Edit</button>
                       <span>{' '}</span>
@@ -213,6 +217,7 @@ function MindmapListComponent({ session }) {
             dataMaps={dataMaps}
             id={idRemove}
             onShowConfirm={setShowConfirm}
+            onGetMindmaps={getMindmaps}
           />
         )}
 
