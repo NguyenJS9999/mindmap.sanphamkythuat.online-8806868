@@ -27,6 +27,14 @@ const getId = () => `${id++}`;
 
 const AddNodeOnEdgeDrop = ({handleCreateNewChildNode}) => {
 
+  // Lấy ra ID từ URL
+const getIDFromURL = () => {
+  const pathname = window.location.pathname;
+  const idThisMindmap = pathname.substring(pathname.lastIndexOf('/') + 1);
+  console.log('idThisMindmap', idThisMindmap);
+  return idThisMindmap;
+}
+
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -38,7 +46,7 @@ const AddNodeOnEdgeDrop = ({handleCreateNewChildNode}) => {
   }, []);
 
   const getThisNode = async () => {
-    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/c33494a6-f4a9-413e-a864-7a283d5fab9e`);
+    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${getIDFromURL()}`);
     const dataParsed = await response.json();
     console.log('getThisNode', dataParsed);
     if (response) {
