@@ -29,9 +29,24 @@ const AddNodeOnEdgeDrop = ({handleCreateNewChildNode}) => {
 
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
+
+  useEffect(() => {
+    getThisNode();
+  }, []);
+
+  const getThisNode = async () => {
+    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/c33494a6-f4a9-413e-a864-7a283d5fab9e`);
+    const dataParsed = await response.json();
+    console.log('getThisNode', dataParsed);
+    if (response) {
+      setNodes(dataParsed?.map?.nodes);
+      setEdges(dataParsed?.map?.edges);
+    }
+  }
+
   const onConnect = useCallback((params) => {
     // reset the start node on connections
     connectingNodeId.current = null;
@@ -74,8 +89,8 @@ const AddNodeOnEdgeDrop = ({handleCreateNewChildNode}) => {
   );
 
   useLayoutEffect(() => {
-    console.log('nodes', nodes);
-    console.log('edges', edges);
+    // console.log('nodes', nodes);
+    // console.log('edges', edges);
   }, [nodes, edges]);
 
   const rfStyle = {
