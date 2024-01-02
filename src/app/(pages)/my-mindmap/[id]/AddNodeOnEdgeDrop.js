@@ -17,7 +17,7 @@ const initialNodes = [
   {
     id: "0",
     type: "input",
-    data: { label: "Node" },
+    data: { label: "My Mindmap" },
     position: { x: 0, y: 50 },
   }
 ];
@@ -50,8 +50,12 @@ const getIDFromURL = () => {
     const dataParsed = await response.json();
     console.log('getThisNode', dataParsed);
     if (response) {
-      setNodes(dataParsed?.map?.nodes);
-      setEdges(dataParsed?.map?.edges);
+      if(dataParsed.map.nodes && dataParsed.map.nodes.length > 0) {
+        setNodes(dataParsed?.map?.nodes);
+        setEdges(dataParsed?.map?.edges);
+      } else {
+        setNodes(initialNodes);
+      }
     }
   }
 

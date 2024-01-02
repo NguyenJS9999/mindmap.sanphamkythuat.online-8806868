@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Loading from '~/components/Loading';
 import ModalConfirmDelete from '~/components/ModalConfirmDelete';
 import { getMindmaps } from '~/services/apiMindmap';
+import { FaTrashAlt } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import './minmap-list.scss';
 
 
@@ -52,14 +54,15 @@ function MindmapListComponent({ session }) {
     const randomMindMapId = uuidv4();
     console.log('randomMindMapId', randomMindMapId);
     if (randomMindMapId) {
-      // router.push(`/my-mindmap/${randomMindMapId}`);
+      // API crate
+      router.push(`/my-mindmap/${randomMindMapId}`);
+      putMindMap(randomMindMapId)
+
       // redirect(`/my-mindmap/${randomMindMapId}`);
       // const dataCreateMindmap = {
       //   id: randomMindMapId,
       //   auth: false
       // }
-      // API crate
-      putMindMap(randomMindMapId)
     }
   };
 
@@ -118,7 +121,7 @@ function MindmapListComponent({ session }) {
 
   async function putMindMap(randomMindMapId) {
       const randomNum = Math.floor(Math.random() * ((100) - (1) + 1)) + (1);
-      const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const currentTime = moment().format('YYYY-MM-DD hh:mm:ss');
       console.log('putMindMap currentTime: ', currentTime);
 
       const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps`,
@@ -177,22 +180,27 @@ function MindmapListComponent({ session }) {
               return (
                 <Fragment>
                   <tr key={item?.id} className='mindmap-item'>
+
                     <th scope="row">
                       <input className="form-check-input" type="checkbox" value="" id="1" />
                     </th>
+
                     <td>
                       <div>
                         <div><Link href={`/my-mindmap/${item.id}`}>{item?.name}</Link></div>
                         <div>{item?.description}</div>
                       </div>
                     </td>
-                    <td>{item?.createdAt}</td>
-                    <td>
-                      <button onClick={() => handleEditMindmap(item?.id)}>Edit</button>
-                      <span>{' '}</span>
-                      <span>{' '}</span>
-                      <button onClick={() => handleDelelteMindmap(item?.id)}>Delelte</button>
+
+                    <td>{moment((item?.createdAt)).format('YYYY-MM-DD hh:mm:ss')}</td>
+
+                    <td className='table-action'>
+                      <div className='w-100 d-flex gap-4 '>
+                        <button onClick={() => handleEditMindmap(item?.id)} className='mindmap-icon'><FaEdit /></button>
+                        <button onClick={() => handleDelelteMindmap(item?.id)} className='mindmap-icon'><FaTrashAlt /></button>
+                      </div>
                     </td>
+
                   </tr>
                 </Fragment>
               )

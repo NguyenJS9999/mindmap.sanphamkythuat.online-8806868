@@ -12,11 +12,26 @@
 }
 
 .mindmap-item {
-	background: red;
+	// border: 1px solid red;
+	border-radius: 0.5rem;
 	cursor: pointer;
-
 	&:hover {
-		background: rgb(131, 136, 145);
+		background: rgba(131, 136, 145, 0.2);
+	}
+	& > td, > th {
+		background-color: transparent;
+		// border-radius: inherit;
+		& > div {
+			background-color: transparent;
+			// border-radius: inherit;
+			height: 100%;
+		}
+	}
+}
+
+.table-action {
+	& > div {
+		transform: translateY(50%);
 	}
 }
 
@@ -25,4 +40,8 @@
 		color: white;
 		text-decoration: none;
 	}
+}
+
+.mindmap-icon {
+	font-size: 20px;
 }
