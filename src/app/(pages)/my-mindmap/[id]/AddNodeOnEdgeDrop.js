@@ -50,7 +50,7 @@ const getIDFromURL = () => {
     const dataParsed = await response.json();
     console.log('getThisNode', dataParsed);
     if (response) {
-      if(dataParsed.map.nodes && dataParsed.map.nodes.length > 0) {
+      if(dataParsed?.map?.nodes && dataParsed.map.nodes.length > 0) {
         setNodes(dataParsed?.map?.nodes);
         setEdges(dataParsed?.map?.edges);
       } else {
@@ -101,8 +101,8 @@ const getIDFromURL = () => {
   );
 
   useLayoutEffect(() => {
-    // console.log('nodes', nodes);
-    // console.log('edges', edges);
+    console.log('nodes', nodes);
+    console.log('edges', edges);
   }, [nodes, edges]);
 
   const rfStyle = {

@@ -12,6 +12,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import "./index.scss";
 import FlowProvider from './flowProvider';
+import { putMindMap } from '~/services/apiMindmap';
 
 function MindmapDetail
 ({ id }) {
@@ -53,6 +54,18 @@ function MindmapDetail
 
 	function handleSave() {
 		console.log('handleSave node');
+		const data = {
+			id: data?.id,
+			name: data.name ? data.name : `Mindmap không có tên`,
+			description: data.description ? data.description : `Chưa có mô tả`,
+			createdAt: data.createdAt,
+			map: {
+			  nodes: [],
+			  edges: [],
+			}
+		}
+
+		putMindMap()
 	}
 	function handleShare() {
 		console.log('handleShare node');

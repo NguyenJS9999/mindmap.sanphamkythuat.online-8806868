@@ -8,7 +8,7 @@ import { redirect, useRouter } from "next/navigation";
 import { v4 as uuidv4 } from 'uuid';
 import Loading from '~/components/Loading';
 import ModalConfirmDelete from '~/components/ModalConfirmDelete';
-import { getMindmaps } from '~/services/apiMindmap';
+import { getMindmaps, putMindMap } from '~/services/apiMindmap';
 import { FaTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import './minmap-list.scss';
@@ -55,14 +55,18 @@ function MindmapListComponent({ session }) {
     console.log('randomMindMapId', randomMindMapId);
     if (randomMindMapId) {
       // API crate
-      router.push(`/my-mindmap/${randomMindMapId}`);
-      putMindMap(randomMindMapId)
 
+      const currentTime = moment().format('YYYY-MM-DD hh:mm:ss');
+      const dataCreateNewMindmap = {
+        id: randomMindMapId,
+        name: 'Mindmap không có tên',
+        createdAt: currentTime,
+        auth: false,
+      }
+      await putMindMap(dataCreateNewMindmap);
+      // router.push(`/my-mindmap/${randomMindMapId}`);
       // redirect(`/my-mindmap/${randomMindMapId}`);
-      // const dataCreateMindmap = {
-      //   id: randomMindMapId,
-      //   auth: false
-      // }
+
     }
   };
 
@@ -119,36 +123,33 @@ function MindmapListComponent({ session }) {
   // }
 
 
-  async function putMindMap(randomMindMapId) {
-      const randomNum = Math.floor(Math.random() * ((100) - (1) + 1)) + (1);
-      const currentTime = moment().format('YYYY-MM-DD hh:mm:ss');
-      console.log('putMindMap currentTime: ', currentTime);
-
-      const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: `Mindmap ${randomNum}`,
-          description: `Mô tả Mindmap ${randomNum}`,
-          id: randomMindMapId,
-          createdAt: currentTime,
-          map: {
-            nodes: [],
-            edges: [],
-          }
-        }),
-      }
-    );
-
-    const data = await response.json();
-    // console.log('putMindMap res', data);
-    if (response) {
-      getMindmaps();
-    }
-  }
+//   async function putMindMap(data) {
+//       // const randomNum = Math.floor(Math.random() * ((100) - (1) + 1)) + (1);
+//       const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps`,
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           id: data?.id,
+//           name: data.name ? data.name : `Mindmap không có tên`,
+//           description: data.description ? data.description : `Chưa có mô tả`,
+//           createdAt: data.createdAt,
+//           // map: {
+//           //   nodes: [],
+//           //   edges: [],
+//           // }
+//         }),
+//       }
+//     );
+//
+//     const data = await response.json();
+//     // console.log('putMindMap res', data);
+//     if (response) {
+//       getMindmaps();
+//     }
+//   }
 
 	return (
     <>
@@ -189,6 +190,7 @@ function MindmapListComponent({ session }) {
                       <div>
                         <div><Link href={`/my-mindmap/${item.id}`}>{item?.name}</Link></div>
                         <div>{item?.description}</div>
+                        <div>{item?.id}</div>
                       </div>
                     </td>
 
