@@ -5,7 +5,9 @@ import AddNodeOnEdgeDrop from './AddNodeOnEdgeDrop';
 function FlowProvider({ id }) {
 
   async function createNewChildNode(nodes, edges) {
-    console.log('parent event');
+    // console.log('parent event', event);
+    console.log('nodes', nodes);
+    console.log('edges', edges);
 
     // const res = await fetch(`https://43jf2n-8080.csb.app/users`, {
     //   method: 'POST',
@@ -23,7 +25,7 @@ function FlowProvider({ id }) {
 
   return (
     <ReactFlowProvider>
-      <AddNodeOnEdgeDrop id={id} handleCreateNewChildNode={createNewChildNode} />
+      <AddNodeOnEdgeDrop id={id} handleChangeNode={createNewChildNode} />
     </ReactFlowProvider>
   );
 }

@@ -13,23 +13,32 @@ import { getServerSession } from "next-auth";
 
 const inter = Inter({ subsets: ['latin'] })
 
+// export const metadata = {
+//   title: {
+//     default: siteConfig.name,
+//     template: `%s | ${siteConfig.name}`,
+//   },
+//   description: siteConfig.description,
+//   icons: [
+//     {
+//       url: "/logo.png",
+//       href: "/logo.png",
+//     },
+//   ],
+//   openGraph: {
+//     images:
+//       "https://upload.wikimedia.org/wikipedia/commons/c/cf/Elements_of_the_culture_mindmap.png",
+//   },
+// };
+
 export const metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  icons: [
-    {
-      url: "/logo.png",
-      href: "/logo.png",
-    },
-  ],
+  title: 'Mindmap của tôi - Minmap follow',
+  description: 'Super Mindmap',
   openGraph: {
-    images:
-      "https://upload.wikimedia.org/wikipedia/commons/c/cf/Elements_of_the_culture_mindmap.png",
+    title: 'Mindmap của tôi - Minmap follow',
+    description: 'Super Mindmap',
   },
-};
+}
 
 async function RootLayout({ children }) {
   const session = await getServerSession();
