@@ -15,4 +15,4 @@ function TemplatePage() {
   )
 }
 
-export default templatePage
+export default TemplatePage
