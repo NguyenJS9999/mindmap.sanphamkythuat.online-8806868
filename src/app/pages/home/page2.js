@@ -1,4 +1,3 @@
-import Home from "./Home"
 
 export const metadata = {
   title: 'Mindmap của tôi - Minmap follow',
@@ -8,11 +7,10 @@ export const metadata = {
     description: 'Super Mindmap',
   },
 }
-function HomePage() {
+function HomePage2() {
   return (
-    // <main></main>
-    <Home/>
+    <main></main>
   )
 }
 
-export default HomePage
+export default HomePage2
