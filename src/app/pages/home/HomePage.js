@@ -12,7 +12,7 @@ const getData = async () => {
 	return res.json();
 };
 
-async function Home() {
+async function HomePage() {
 	// const data = await getData();
 	return (
 		<div className="homepage">
@@ -68,7 +68,7 @@ async function Home() {
 	);
 }
 
-export default Home;
+export default HomePage;
 
 {
 	/* <div className="relative banner">
