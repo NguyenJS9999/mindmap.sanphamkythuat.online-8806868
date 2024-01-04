@@ -8,6 +8,7 @@ import ReactFlow, {
   ReactFlowProvider,
   Controls,
   MiniMap,
+  Background
 } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -25,13 +26,13 @@ const initialNodes = [
 let id = 1;
 const getId = () => `${id++}`;
 
-const AddNodeOnEdgeDrop = ({handleCreateNewChildNode}) => {
+const AddNodeOnEdgeDrop = ({handleChangeNode}) => {
 
   // Lấy ra ID từ URL
 const getIDFromURL = () => {
   const pathname = window.location.pathname;
   const idThisMindmap = pathname.substring(pathname.lastIndexOf('/') + 1);
-  console.log('idThisMindmap', idThisMindmap);
+  // console.log('idThisMindmap', idThisMindmap);
   return idThisMindmap;
 }
 
@@ -48,7 +49,7 @@ const getIDFromURL = () => {
   const getThisNode = async () => {
     const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${getIDFromURL()}`);
     const dataParsed = await response.json();
-    console.log('getThisNode', dataParsed);
+    // console.log('getThisNode', dataParsed);
     if (response) {
       if(dataParsed?.map?.nodes && dataParsed.map.nodes.length > 0) {
         setNodes(dataParsed?.map?.nodes);
@@ -70,7 +71,7 @@ const getIDFromURL = () => {
   }, []);
 
   const onConnectEnd = useCallback( (event) => {
-    console.log('onConnectEnd', event);
+    // console.log('onConnectEnd', event);
 
       if (!connectingNodeId.current) return;
 
@@ -93,7 +94,7 @@ const getIDFromURL = () => {
 
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) => eds.concat({ id,source: connectingNodeId.current,target: id }));
-        handleCreateNewChildNode(nodes, edges);
+        handleChangeNode(nodes, edges);
 
       }
     },
@@ -101,8 +102,8 @@ const getIDFromURL = () => {
   );
 
   useLayoutEffect(() => {
-    console.log('nodes', nodes);
-    console.log('edges', edges);
+    // console.log('nodes', nodes);
+    // console.log('edges', edges);
   }, [nodes, edges]);
 
   const rfStyle = {
@@ -127,7 +128,7 @@ const getIDFromURL = () => {
       >
         <MiniMap />
         <Controls />
-
+        <Background color="#ccc" variant="dots" />
       </ReactFlow>
     </div>
   );
