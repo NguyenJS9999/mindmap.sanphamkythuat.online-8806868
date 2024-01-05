@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { siteConfig } from '~/config/site';
 import { Providers } from './Providers'
 import { Toaster } from 'react-hot-toast';
-import Header from '~/components/header/Header';
+// import Header from '~/components/header/Header';
 import AuthProvider from '~/components/AuthProvider';
-import Footer from '~/components/footer/Footer.jsx';
+// import Footer from '~/components/footer/Footer.jsx';
 import { getServerSession } from "next-auth";
 
 
@@ -48,11 +48,11 @@ async function RootLayout({ children }) {
       <body className={inter.className} suppressHydrationWarning={true}>
         <AuthProvider>
           <Providers session={session}>
-              <Header session={session}/>
+              {/* <Header session={session}/> */}
                 <div>
                   {children}
                 </div>
-            <Footer/>
+            {/* <Footer/> */}
             <Toaster />
           </Providers>
         </AuthProvider>
