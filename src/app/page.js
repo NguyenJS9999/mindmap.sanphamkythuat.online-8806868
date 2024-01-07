@@ -1,13 +1,13 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { FcGoogle } from 'react-icons/fc';
+// import Link from 'next/link';
+// import { FcGoogle } from 'react-icons/fc';
 
 export default function Home() {
 	return (
 		<div className="homepage">
 			<div className="container homepage-wrap">
 				<h1>Học tập hiệu quả với bản đồ tư duy</h1>
-				<button type="button" class="btn btn-secondary mt-2">
+				<button type="button" class="btn btn-s econdary mt-2">
 					Sử dụng miễn phí
 				</button>
 				<Image
