@@ -3,6 +3,7 @@ import './globals.scss'
 import './common.scss'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { siteConfig } from '~/config/site';
+import { Metadata } from 'next'
 import { Providers } from './Providers'
 import { Toaster } from 'react-hot-toast';
 import Header from '~/components/header/Header';
@@ -14,30 +15,26 @@ import { getServerSession } from "next-auth";
 const inter = Inter({ subsets: ['latin'] })
 
 // export const metadata = {
-//   title: {
-//     default: siteConfig.name,
-//     template: `%s | ${siteConfig.name}`,
-//   },
-//   description: siteConfig.description,
-//   icons: [
-//     {
-//       url: "/logo.png",
-//       href: "/logo.png",
-//     },
-//   ],
-//   openGraph: {
-//     images:
-//       "https://upload.wikimedia.org/wikipedia/commons/c/cf/Elements_of_the_culture_mindmap.png",
-//   },
-// };
+//   title: 'Mindmap của tôi - Minmap follow',
+//   description: 'Super Mindmap',
+// }
 
 export const metadata = {
-  title: 'Mindmap của tôi - Minmap follow',
-  description: 'Super Mindmap',
+  metadataBase: new URL('http://localhost:3000'),
+  title: 'Title webtsite',
+  description: 'this is the desciption',
   openGraph: {
-    title: 'Mindmap của tôi - Minmap follow',
-    description: 'Super Mindmap',
+    title: 'Title webtsite',
+    description: 'this is the desciption',
+    image: 'url/image.png'
   },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@eMartiiin94',
+    title: 'Title webtsite',
+    description: 'this is the desciption',
+    image: 'url/image.png'
+  }
 }
 
 async function RootLayout({ children }) {
