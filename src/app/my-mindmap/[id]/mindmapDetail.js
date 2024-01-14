@@ -6,26 +6,36 @@ import { usePathname } from 'next/navigation'
 // import Mindmap from '~/components/mindmap3/Mindmap';
 import { FaRegSave, FaShare } from 'react-icons/fa';
 import Toast from 'react-bootstrap/Toast';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import "./index.scss";
 import FlowProvider from './flowProvider';
-import { putMindMap } from '~/services/apiMindmap';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router'
+import { getOneMindmap, updateOneMindMap } from '~/services/apiMindmap';
+import { useEffect } from 'react';
+import { mindmapSlice } from '~/redux/slice/mindmapSlice';
+const { changeNode, changeEdges } = mindmapSlice.actions;
 
-function MindmapDetail
-({ id }) {
+
+function MindmapDetail() {
 	const pathname = usePathname();
+	const dispatch = useDispatch();
 
-	const idMindmap = (pathname).replace(/^\/my-mindmap\//, "");
-	// console.log('idMindmap', idMindmap);
+	const nodesStore = useSelector((state) => state.mindmap.nodes);
+	const edgesStore = useSelector((state) => state.mindmap.edges);
 
-
+	const [idMindmap, setIdMindmap] = useState('');
 	const [nameMindMap, setNameMindMap] = useState('Mindmap không có tên');
 	const [decriptionMindMap, setDecriptionMindMap] = useState('Chưa có mô tả');
+	const [statusMindMap, setStatusMindMapp] = useState('private');
 	const [statusModalShare, setStatusModalShare] = useState(true);
 	const [showModalShare, setShowModalShare] = useState(false);
+	const [nodesApi, setNodesApi] = useState([]);
+	const [edgesApi, setEdgesApi] = useState([]);
+
 
 	const [typeShowShare, setTypeShowShare] = useState("private");
 	const [ dataShareMindmap, setDataShareMindmap ]	= useState(
@@ -37,35 +47,57 @@ function MindmapDetail
 		}
 	);
 
+	useEffect(() => {
+		getIDFromURL();
+		getThisMindmap();
+	}, [])
 
-	// const postUser = async () => {
-	// 	const res = await fetch(`https://43jf2n-8080.csb.app/users`, {
-	// 		method: 'POST',
-	// 		headers: {
-	// 			'Content-Type': 'application/json'
-	// 		},
-	// 		body: JSON.stringify({
-	// 			name: 'Xin chào'
-	// 		})
-	// 	});
-	// 	console.log(res);
-	// };
-	// postUser();
+	// Lấy ra ID từ URL
+	const getIDFromURL = () => {
+		const pathname = window.location.pathname;
+		const idThisMindmap = pathname.substring(pathname.lastIndexOf('/') + 1);
+		setIdMindmap(idThisMindmap);
+	};
 
-	function handleSave() {
-		console.log('handleSave node');
-		const data = {
-			id: data?.id,
-			name: data.name ? data.name : `Mindmap không có tên`,
-			description: data.description ? data.description : `Chưa có mô tả`,
-			createdAt: data.createdAt,
+	const getThisMindmap = async () => {
+		const response = await getOneMindmap(idMindmap);
+    const dataParsed = await response.json();
+
+		console.log('getThisMindmap [0', dataParsed[0].map);
+
+    if (response.status === 200) {
+			dispatch(changeNode(dataParsed[0].map.nodes));
+			dispatch(changeEdges(dataParsed[0].map.edges));
+
+			setNodesApi(dataParsed[0].map.nodes);
+			setEdgesApi(dataParsed[0].map.edges);
+
+			setNameMindMap(dataParsed[0].map.name)
+			setDecriptionMindMap(dataParsed[0].map.decription)
+    }
+	}
+
+	async function handleSave() {
+		const dataSave = {
+			name: nameMindMap,
+			description: decriptionMindMap,
 			map: {
-			  nodes: [],
-			  edges: [],
-			}
+				nodes: nodesStore,
+				edges: edgesStore,
+			},
+			status: statusMindMap,
 		}
 
-		putMindMap()
+
+		const response = await updateOneMindMap(idMindmap, dataSave)
+    const dataParsed = await response.json();
+		console.log('handleSave response', response);
+		console.log('handleSave dataParsed', dataParsed);
+
+    if (response.status === 200) {
+      alert('Minmap updated!')
+    }
+
 	}
 	function handleShare() {
 		console.log('handleShare node');
@@ -94,9 +126,13 @@ function MindmapDetail
 		setShowModalShare(false);
 
 	}
+
+
 	const handleSaveShareMindmap = () => {
 		console.log("handleSaveShareMindmap");
 	}
+
+
 
 	return (
 		<div className="mindmap-page">
@@ -254,7 +290,11 @@ function MindmapDetail
 				</Modal>
 			</div>
 			{/* <Mindmap id={idMindmap} /> */}
-			<FlowProvider id={idMindmap} />
+			<FlowProvider
+				idMindmap={idMindmap}
+				nodesApi={nodesApi}
+				edgesApi={edgesApi}
+			/>
 
 			{/* <Toast>
 				<Toast.Header>

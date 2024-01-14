@@ -9,6 +9,10 @@
 	// border: 1px solid $main-color;
 	border-radius: 0.55rem;
 	user-select: none;
+
+	& th {
+		text-transform: uppercase;
+	}
 }
 
 .mindmap-item {

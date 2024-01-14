@@ -1,9 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, redirect } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
-
-
+import { signOut,  } from "next-auth/react"; // useSession
 import './header.scss'
 import { Fragment, useEffect, useState } from "react";
 
@@ -12,7 +10,6 @@ function Header({session}) {
 	// const [ didLogin, setDidLogin ] = useState(false);
 
 	useEffect(() => {
-
 	}, []);
 
 	function handleSignOut() {

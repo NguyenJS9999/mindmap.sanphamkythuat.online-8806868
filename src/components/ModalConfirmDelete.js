@@ -31,9 +31,7 @@ function ModalConfirmDelete({
     //   onLoading(false);
     // }
     // console.log('handleDelelteMindmap modal', id);
-    const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
-      method: 'DELETE',
-    });
+    const response = await deleteMindmap(id);
     // console.log('Delete users response', response);
     if (response) {
       onGetMindmaps();

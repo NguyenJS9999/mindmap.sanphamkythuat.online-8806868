@@ -1,18 +1,28 @@
 "use client"
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import ReactFlow, {
+import React, { useCallback, useEffect, useRef } from "react";
+import ReactFlow,{
+  MiniMap,
+  Controls,
+  Background,
   useNodesState,
   useEdgesState,
-  addEdge,
   useReactFlow,
-  ReactFlowProvider,
-  Controls,
-  MiniMap,
-  Background
-} from "reactflow";
+  getIncomers,
+  getOutgoers,
+  getConnectedEdges,
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+} from 'reactflow'
 import "reactflow/dist/style.css";
-
 import "./index.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { mindmapSlice } from "~/redux/slice/mindmapSlice";
+const { changeNode, changeEdges } = mindmapSlice.actions;
+import CustomNode from './CustomNode'
+
+import TextUpdaterNode from './TextUpdaterNode/TextUpdaterNode.js';
+const nodeTypes = { textUpdater: TextUpdaterNode };
 
 const initialNodes = [
   {
@@ -26,20 +36,22 @@ const initialNodes = [
 let id = 1;
 const getId = () => `${id++}`;
 
-const AddNodeOnEdgeDrop = ({handleChangeNode}) => {
+const AddNodeOnEdgeDrop = () => {
+  const dispatch = useDispatch();
 
   // Lấy ra ID từ URL
-const getIDFromURL = () => {
-  const pathname = window.location.pathname;
-  const idThisMindmap = pathname.substring(pathname.lastIndexOf('/') + 1);
-  // console.log('idThisMindmap', idThisMindmap);
-  return idThisMindmap;
-}
+  const getIDFromURL = () => {
+    const pathname = window.location.pathname;
+    const idThisMindmap = pathname.substring(pathname.lastIndexOf('/') + 1);
+    // console.log('idThisMindmap', idThisMindmap);
+    return idThisMindmap;
+  }
+
 
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
@@ -60,16 +72,27 @@ const getIDFromURL = () => {
     }
   }
 
+  // 1
   const onConnect = useCallback((params) => {
     // reset the start node on connections
     connectingNodeId.current = null;
     setEdges((eds) => addEdge(params, eds));
   }, []);
-
+  // 2
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
   }, []);
 
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [setNodes]
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setEdges]
+  );
+
+  // 3
   const onConnectEnd = useCallback( (event) => {
     // console.log('onConnectEnd', event);
 
@@ -94,16 +117,40 @@ const getIDFromURL = () => {
 
         setNodes((nds) => nds.concat(newNode));
         setEdges((eds) => eds.concat({ id,source: connectingNodeId.current,target: id }));
-        handleChangeNode(nodes, edges);
-
       }
     },
     [screenToFlowPosition]
   );
 
-  useLayoutEffect(() => {
-    // console.log('nodes', nodes);
-    // console.log('edges', edges);
+  const onNodesDelete = useCallback((deleted) => {
+      console.log('onNodesDelete deleted', deleted);
+      setEdges(
+        deleted.reduce((acc, node) => {
+          const incomers = getIncomers(node, nodes, edges);
+          const outgoers = getOutgoers(node, nodes, edges);
+          const connectedEdges = getConnectedEdges([node], edges);
+
+          const remainingEdges = acc.filter((edge) => !connectedEdges.includes(edge));
+
+          const createdEdges = incomers.flatMap(({ id: source }) =>
+            outgoers.map(({ id: target }) => ({ id: `${source}->${target}`, source, target }))
+          );
+
+          return [...remainingEdges, ...createdEdges];
+        }, edges)
+      );
+    },
+    [nodes, edges]
+  );
+
+  useEffect(() => {
+    const timeoutId = setTimeout(function() {
+      // console.log('nodes', nodes);
+      // dispatch(changeNode(nodes));
+      // dispatch(changeEdges(edges));
+
+      clearTimeout(timeoutId);
+    }, 1000);
   }, [nodes, edges]);
 
   const rfStyle = {
@@ -120,15 +167,18 @@ const getIDFromURL = () => {
         onConnect={onConnect}
         onConnectStart={onConnectStart}
         onConnectEnd={onConnectEnd}
+        onNodesDelete={onNodesDelete}
+        nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{ padding: 2 }}
+        fitViewOptions={{ padding: 0.5 }}
         nodeOrigin={[0.5, 0]}
-        style={rfStyle}
-        className="custom-node"
+        deleteKeyCode={['Delete']}
+        // style={rfStyle}
+        // className="custom-node"
       >
         <MiniMap />
         <Controls />
-        <Background color="#ccc" variant="dots" />
+        <Background color="#ccc" variant="dots" gap={12} size={1} />
       </ReactFlow>
     </div>
   );

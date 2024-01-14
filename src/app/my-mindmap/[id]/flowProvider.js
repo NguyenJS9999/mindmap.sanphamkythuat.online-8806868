@@ -1,31 +1,18 @@
 'use client';
 import { ReactFlowProvider } from 'reactflow';
-import AddNodeOnEdgeDrop from './AddNodeOnEdgeDrop';
+import CustomNode from './CustomNode';
 
-function FlowProvider({ id }) {
-
-  async function createNewChildNode(nodes, edges) {
-    // console.log('parent event', event);
-    console.log('nodes', nodes);
-    console.log('edges', edges);
-
-    // const res = await fetch(`https://43jf2n-8080.csb.app/users`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     nodes: nodes,
-    //     edges: edges
-    //   })
-    // });
-    // console.log(res);
-
-  };
+function FlowProvider({ idMindmap, nodesApi, edgesApi, data }) {
 
   return (
     <ReactFlowProvider>
-      <AddNodeOnEdgeDrop id={id} handleChangeNode={createNewChildNode} />
+      {/* <AddNodeOnEdgeDrop id={id} handleChangeNode={createNewChildNode} /> */}
+      <CustomNode
+       idMindmap={idMindmap}
+       nodesApi={nodesApi}
+       edgesApi={edgesApi}
+      />
+
     </ReactFlowProvider>
   );
 }

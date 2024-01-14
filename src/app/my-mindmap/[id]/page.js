@@ -1,7 +1,4 @@
-// import MindmapComponent from "~/components/mindmap3";
-// import MindmapControl from "~/components/mindmap2/MindmapControl";
 import { getServerSession } from "next-auth";
-// import { DataMindmapProvider } from '~/app/context/DataMindmapProvider';
 import MindmapDetail from "./mindmapDetail";
 
 export const metadata = {
@@ -21,9 +18,7 @@ async function MyMindmapUsePage({ params: { id } }) {
 	}
 
 	return (
-    // <DataMindmapProvider>
 		<MindmapDetail />
-		// </DataMindmapProvider>
 
 	);
 }

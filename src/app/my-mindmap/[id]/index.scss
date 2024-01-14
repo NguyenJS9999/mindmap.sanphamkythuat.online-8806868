@@ -172,22 +172,22 @@ $main-color: #4F46E5;
   border-radius: 0.25rem;
 }
 
-.react-flow__pane {
-  // border: 1px solid red;
-
-  & .react-flow__viewport {
-    & .react-flow__nodes {
-      & .react-flow__node {
-        border: 1px solid rgba(139,195,74);
-        border-radius: 0.25rem;
-        box-shadow: 0 0px 0px 1px rgba(139,195,74);
-        background: rgba(139,195,74);
-        color: rgba(255,255,255);
-      }
-    }
-  }
-  & .react-flow__edge-path, .react-flow__connection-path {
-    stroke: #b1b1b7;
-  }
-}
+// .react-flow__pane {
+//   // border: 1px solid red;
+//
+//   & .react-flow__viewport {
+//     & .react-flow__nodes {
+//       & .react-flow__node {
+//         border: 1px solid rgba(139,195,74);
+//         border-radius: 0.25rem;
+//         box-shadow: 0 0px 0px 1px rgba(139,195,74);
+//         background: rgba(139,195,74);
+//         color: rgba(255,255,255);
+//       }
+//     }
+//   }
+//   & .react-flow__edge-path, .react-flow__connection-path {
+//     stroke: #b1b1b7;
+//   }
+// }
 

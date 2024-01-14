@@ -10,6 +10,7 @@ import Header from '~/components/header/Header';
 import AuthProvider from '~/components/AuthProvider';
 import Footer from '~/components/footer/Footer.jsx';
 import { getServerSession } from "next-auth";
+import ReduxProviders from "~/redux/ReduxProviders";
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -47,7 +48,7 @@ async function RootLayout({ children }) {
           <Providers session={session}>
               <Header session={session}/>
                 <div>
-                  {children}
+                  <ReduxProviders>{children}</ReduxProviders>
                 </div>
             <Footer/>
             <Toaster />
