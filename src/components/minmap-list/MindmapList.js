@@ -43,15 +43,23 @@ function MindmapListComponent({ session }) {
 			  description: 'Chưa có mô tả',
         createdAt: currentTime,
         auth: false,
-        status: false,
+        status: 'private',
         userEmail: session.user.email,
         map: {
-          nodes: [],
+          nodes: [
+            {
+              id: '0',
+              type: 'textUpdater',
+              data: { label: `My Mindmap` },
+              position: { x: 0, y: 0 },
+              typeOrigin: true // Đánh dấu là node gốc
+            }
+          ],
           edges: [],
         },
       }
       await postOneMindMap(dataCreateNewMindmap);
-      // router.push(`/my-mindmap/${randomMindMapId}`);
+      router.push(`/my-mindmap/${randomMindMapId}`);
       // redirect(`/my-mindmap/${randomMindMapId}`);
       await getMindmaps();
     }
@@ -74,10 +82,19 @@ function MindmapListComponent({ session }) {
   const getMindmaps = async () => {
     const response = await getListMindmaps();
     const dataParsed = await response.json();
+    // console.log('getMindmaps ', dataParsed);
     if (response.status === 200) {
       setMindmapList(dataParsed);
     }
   }
+
+  const convertStatus = (status) => {
+    if (status === 'public') {
+      return 'Công khai'
+    } else if (status === 'private') {
+      return 'Riêng tư'
+    }
+  };
 
 	return (
     <>
@@ -124,7 +141,8 @@ function MindmapListComponent({ session }) {
                     </td>
 
                     <td>{moment((item?.createdAt)).format('YYYY-MM-DD hh:mm:ss')}</td>
-                    <td>{item.status ? 'Công khai' : 'Riêng tư' }</td>
+                    <td>{item.status && convertStatus(item.status) }</td>
+                    {}
 
                     <td className='table-action'>
                       <div className='w-100 d-flex gap-4 '>

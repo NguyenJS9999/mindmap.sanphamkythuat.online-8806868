@@ -10,7 +10,6 @@ export const mindmapSlice = createSlice({
 	initialState,
 	reducers: {
 		changeNode: (state, action) => {
-			console.log('slice mindmap changeNode', action.payload);
 			state.nodes = action.payload;
 		},
 		changeEdges: (state, action) => {

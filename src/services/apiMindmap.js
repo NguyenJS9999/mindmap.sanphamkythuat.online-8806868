@@ -43,11 +43,13 @@ export const getListMindmaps = async (query = {}) => {
 
 export const getOneMindmap = async (id) => {
 	try {
-		const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`);
-		if (response.ok || response.status === 200) {
-			return response;
-    } else {
-			throw new Error(`Get mindmap been failed with status: ${response.status}`);
+		if (id) {
+			const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`);
+			if (response.ok || response.status === 200) {
+				return response;
+			} else {
+				throw new Error(`Get mindmap been failed with status: ${response.status}`);
+			}
 		}
 	} catch (error) {
 		console.log(error);
@@ -57,47 +59,51 @@ export const getOneMindmap = async (id) => {
 // Thêm 1 bản ghi vào đầu mảng
 export async function postOneMindMap(data) {
   console.log('postOneMindMap export', data);
-	try {
-		const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps?_prepend=1`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		});
-    // Nếu thành công
-    if (!response.ok) {
-      throw new Error(`Request been failed with status: ${response.status}`);
-    }
+	if (data) {
+		try {
+			const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps?_prepend=1`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+			// Nếu thành công
+			if (!response.ok) {
+				throw new Error(`Request been failed with status: ${response.status}`);
+			}
 
-		console.log('putMindMap response', response);
+			console.log('putMindMap response', response);
 
-    return response;
-	} catch (error) {
-		console.error('Error during fetch:', error);
+			return response;
+		} catch (error) {
+			console.error('Error during fetch:', error);
+		}
 	}
 }
 
 // Cập nhập 1
 export async function updateOneMindMap(id, data) {
-	try {
-		const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		});
-    // Nếu thành công
-    if (!response.ok) {
-      throw new Error(`Request been failed with status: ${response.status}`);
-    }
+	if (id && data) {
+		try {
+			const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+			// Nếu thành công
+			if (!response.ok) {
+				throw new Error(`Request been failed with status: ${response.status}`);
+			}
 
-		console.log('putMindMap response', response);
+			console.log('putMindMap response', response);
 
-    return response;
-	} catch (error) {
-		console.error('Error during fetch:', error);
+			return response;
+		} catch (error) {
+			console.error('Error during fetch:', error);
+		}
 	}
 }
 
@@ -122,18 +128,20 @@ export async function updateOneMindMap(id, data) {
 // };
 
 export const deleteMindmap = async (id) => {
- try {
-	const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
-		method: 'DELETE',
-	});
+ if (id) {
+	try {
+		const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
+			method: 'DELETE',
+		});
 
-	if (!response.ok) {
-		throw new Error(`Request been failed with status: ${response.status}`);
-	}
+		if (!response.ok) {
+			throw new Error(`Request been failed with status: ${response.status}`);
+		}
 
-	return response;
+		return response;
 
- } catch (error) {
-	console.log('Delete failue',error);
+	 } catch (error) {
+		console.log('Delete failue',error);
+	 }
  }
 };
