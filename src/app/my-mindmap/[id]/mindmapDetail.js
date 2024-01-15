@@ -115,7 +115,7 @@ function MindmapDetail({ caseNumb, canView, canEdit }) {
 			};
 
 			const response = await updateOneMindMap(getIDFromURL(), dataSave);
-			const dataParsed = await response.json();
+			// const dataParsed = await response.json();
 			// console.log('handleSave response', response);
 
 			if (response.status === 200) {
