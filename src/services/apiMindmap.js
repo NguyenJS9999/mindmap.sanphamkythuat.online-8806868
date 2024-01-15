@@ -1,9 +1,6 @@
-// https://f86wpp-8080.csb.app/
-import moment from 'moment';
-
 
 async function getListMindMap() {
-	const response = await fetch(`https://f86wpp-8080.csb.app/`);
+	const response = await fetch(`${API}/`);
 	return response.json();
 }
 
@@ -22,11 +19,13 @@ async function getListMindMap() {
 // };
 //
 
-const api = `${process.env.NEXT_PUBLIC_API}/mindmaps`;
+// const API = process.env.API_MINDMAP;
+// const API = 'https://f86wpp-8080.csb.app';
+export const API = 'http://localhost:5000';
 
 export const getListMindmaps = async (query = {}) => {
 	try {
-		const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps?_sort=createdAt&_order=desc`);
+		const response = await fetch(`${API}/mindmaps?_sort=createdAt&_order=desc`);
     // const dataParsed = await response.json();
     // console.log('getListMindmaps', response);
     // console.log('getListMindmaps', dataParsed);
@@ -44,7 +43,7 @@ export const getListMindmaps = async (query = {}) => {
 export const getOneMindmap = async (id) => {
 	try {
 		if (id) {
-			const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`);
+			const response = await fetch(`${API}/mindmaps/${id}`);
 			if (response.ok || response.status === 200) {
 				return response;
 			} else {
@@ -58,10 +57,9 @@ export const getOneMindmap = async (id) => {
 
 // Thêm 1 bản ghi vào đầu mảng
 export async function postOneMindMap(data) {
-  console.log('postOneMindMap export', data);
 	if (data) {
 		try {
-			const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps?_prepend=1`, {
+			const response = await fetch(`${API}/mindmaps?_prepend=1`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -72,8 +70,6 @@ export async function postOneMindMap(data) {
 			if (!response.ok) {
 				throw new Error(`Request been failed with status: ${response.status}`);
 			}
-
-			console.log('putMindMap response', response);
 
 			return response;
 		} catch (error) {
@@ -86,8 +82,8 @@ export async function postOneMindMap(data) {
 export async function updateOneMindMap(id, data) {
 	if (id && data) {
 		try {
-			const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
-				method: 'PUT',
+			const response = await fetch(`${API}/mindmaps/${id}`, {
+				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -130,7 +126,7 @@ export async function updateOneMindMap(id, data) {
 export const deleteMindmap = async (id) => {
  if (id) {
 	try {
-		const response = await fetch(`https://f86wpp-8080.csb.app/mindmaps/${id}`, {
+		const response = await fetch(`${API}/mindmaps/${id}`, {
 			method: 'DELETE',
 		});
 

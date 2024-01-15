@@ -1,9 +1,11 @@
 'use client';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useSWRConfig } from 'swr';
 import { deleteMindmap } from '~/services/apiMindmap';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function ModalConfirmDelete({
   onShowConfirm,
   id,
@@ -33,8 +35,12 @@ function ModalConfirmDelete({
     // console.log('handleDelelteMindmap modal', id);
     const response = await deleteMindmap(id);
     // console.log('Delete users response', response);
-    if (response) {
+
+    if (response.status === 200) {
+      toast.success("Updated mindmap success!");
       onGetMindmaps();
+		} else {
+      toast.warning("Updated mindmap failed!");
     }
   };
   return (
@@ -59,6 +65,7 @@ function ModalConfirmDelete({
           <button className="px-5 py-2 rounded-md bg-[#f8d0d3f7] text-[#ff4757]" onClick={handleDelete} > Xác nhận </button>
         </div>
       </div>
+			<ToastContainer />
     </div>
   );
 }

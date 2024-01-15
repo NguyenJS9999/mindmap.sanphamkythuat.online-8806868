@@ -1,6 +1,7 @@
 import Image from 'next/image';
 // import Link from 'next/link';
 // import { FcGoogle } from 'react-icons/fc';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
 	return (

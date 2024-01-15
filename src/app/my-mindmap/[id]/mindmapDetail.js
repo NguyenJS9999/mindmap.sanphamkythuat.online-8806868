@@ -5,21 +5,25 @@ import { usePathname } from 'next/navigation';
 
 // import Mindmap from '~/components/mindmap3/Mindmap';
 import { FaRegSave, FaShare } from 'react-icons/fa';
-import Toast from 'react-bootstrap/Toast';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import './index.scss';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import FlowProvider from './flowProvider';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { getOneMindmap, updateOneMindMap } from '~/services/apiMindmap';
+import { API, getOneMindmap, updateOneMindMap } from '~/services/apiMindmap';
 import { useEffect } from 'react';
 import { mindmapSlice } from '~/redux/slice/mindmapSlice';
 const { changeNode, changeEdges } = mindmapSlice.actions;
 
-function MindmapDetail() {
+function MindmapDetail({ caseNumb, canView, canEdit }) {
+	// console.log('caseNumb', caseNumb);
+	// console.log('canView', canView);
+	// console.log('canEdit', canEdit);
 	const pathname = usePathname();
 	const dispatch = useDispatch();
 
@@ -27,21 +31,32 @@ function MindmapDetail() {
 	const edgesStore = useSelector(state => state.mindmap.edges);
 
 	const [idMindmap, setIdMindmap] = useState('');
-	const [nameMindMap, setNameMindMap] = useState('Mindmap không có tên');
-	const [decriptionMindMap, setDecriptionMindMap] = useState('Chưa có mô tả');
-	const [statusMindMap, setStatusMindMapp] = useState('private');
-	const [statusModalShare, setStatusModalShare] = useState(true);
+	const [dataMindmap, setDataMindmap] = useState({});
+
+	const [nameMindMap, setNameMindMap] = useState('');
+	const [decriptionMindMap, setDecriptionMindMap] = useState('');
+	const [nameMindMapShow, setNameMindMapShow] = useState(
+		'Mindmap không có tên'
+	);
+	const [decriptionMindMapShow, setDecriptionMindMapShow] =
+		useState('Chưa có mô tả');
+	const [statusMindmap, setStatusMindmap] = useState('private');
+
 	const [showModalShare, setShowModalShare] = useState(false);
+
 	const [nodesApi, setNodesApi] = useState([]);
 	const [edgesApi, setEdgesApi] = useState([]);
 
 	const [typeShowShare, setTypeShowShare] = useState('private');
-	const [dataShareMindmap, setDataShareMindmap] = useState({
-		url: `https://f86wpp-8080.csb.app${pathname}`,
-		title: nameMindMap,
-		decription: decriptionMindMap,
-		image: `http://f8-mindmap.sanphamkythuat.online:880/_next/static/media/so-do-tu-duy.95dad645.jpg`
-	});
+
+	const [urlShareMindMap, setUrlShareMindMap] = useState(`${API}${pathname}`);
+
+	// const [dataShareMindmap, setDataShareMindmap] = useState({
+	// 	url: `${API}${pathname}`,
+	// 	title: nameMindMap,
+	// 	decription: decriptionMindMap,
+	// 	image: `http://f8-mindmap.sanphamkythuat.online:880/_next/static/media/so-do-tu-duy.95dad645.jpg`
+	// });
 
 	useEffect(() => {
 		getIDFromURL();
@@ -62,78 +77,68 @@ function MindmapDetail() {
 		const id = getIDFromURL();
 
 		if (id || idMindmap) {
-			console.log('id()', id);
-			console.log('idMindmap', idMindmap);
-
 			const response = await getOneMindmap(id);
 			const dataParsed = await response.json();
 
-			console.log('getThisMindmap res', response);
-			console.log('getThisMindmap dataParsed', dataParsed);
+			// console.log('getThisMindmap res', response);
+			// console.log('getThisMindmap dataParsed', dataParsed);
 
 			if (response.status === 200) {
-				dispatch(changeNode(dataParsed?.map.nodes));
-				dispatch(changeEdges(dataParsed?.map.edges));
+				if (canView) {
+					dispatch(changeNode(dataParsed?.map.nodes));
+					dispatch(changeEdges(dataParsed?.map.edges));
 
-				setNodesApi(dataParsed?.map.nodes);
-				setEdgesApi(dataParsed?.map?.edges);
-				//
-				setNameMindMap(dataParsed?.map?.name);
-				setDecriptionMindMap(dataParsed?.map?.decription);
-				// console.log('node ', dataParsed);
+					setNodesApi(dataParsed?.map.nodes);
+					setEdgesApi(dataParsed?.map?.edges);
+					//
+					setNameMindMap(dataParsed?.name);
+					setDecriptionMindMap(dataParsed?.description);
+					setStatusMindmap(dataParsed?.status);
+					setDataMindmap(dataParsed);
+					// console.log('node ', dataParsed);
+				}
 			}
 		}
 	};
 
 	async function handleSave() {
-		const dataSave = {
-			name: nameMindMap,
-			description: decriptionMindMap,
-			map: {
-				nodes: nodesStore,
-				edges: edgesStore
-			},
-			status: statusMindMap
-		};
+		if (canEdit) {
+			const dataSave = {
+				...dataMindmap,
+				name: nameMindMap,
+				description: decriptionMindMap,
+				map: {
+					nodes: nodesStore,
+					edges: edgesStore
+				},
+				status: statusMindmap
+			};
 
-		const response = await updateOneMindMap(getIDFromURL(), dataSave);
-		const dataParsed = await response.json();
-		// console.log('handleSave response', response);
-		console.log('handleSave dataParsed', dataParsed);
+			const response = await updateOneMindMap(getIDFromURL(), dataSave);
+			const dataParsed = await response.json();
+			// console.log('handleSave response', response);
 
-		if (response.status === 200) {
-			alert('Minmap updated!');
+			if (response.status === 200) {
+				toast.success('Updated mindmap success!');
+			}
 		}
 	}
+
 	function handleShare() {
-		console.log('handleShare node');
-		setStatusModalShare(decriptionMindMap);
 		setShowModalShare(true);
 	}
 
-	function handChangeInput(event, typeInput) {
-		const valueInput = event.target.value;
-		console.log('handleShare node', valueInput, typeInput);
-		switch (typeInput) {
-			case 'name-mindmap':
-				setNameMindMap(valueInput);
-				break;
-			case 'decription-mindmap':
-				setDecriptionMindMap(valueInput);
-				break;
-			default:
-				break;
-		}
-	}
+	const handleSetStatus = status => {
+		// console.log('handleSetStatus', status);
+		setStatusMindmap(status);
+	};
 
 	const handleCloseModalShare = () => {
-		console.log('handleCloseModalShare');
-		setStatusModalShare(false);
 		setShowModalShare(false);
 	};
 
 	const handleSaveShareMindmap = () => {
-		console.log('handleSaveShareMindmap');
+		handleSave();
 	};
 
 	return (
@@ -143,30 +148,35 @@ function MindmapDetail() {
 					<input
 						id="name-mindmap"
 						type="text"
-						value={nameMindMap}
-						onChange={event =>
-							handChangeInput(event, 'name-mindmap')
-						}
+						value={nameMindMapShow}
+						onChange={event => {
+							setNameMindMapShow(event.target.value),
+								setNameMindMap(event.target.value);
+						}}
 						placeholder="Mindmap name"
 					/>
 					<div className="mindmap-head-controler">
-						<button
-							onClick={handleSave}
-							id="save-mind-map"
-							className="mindmap-btn-head"
-						>
-							<FaRegSave />
-							<span>Lưu thay đổi</span>
-						</button>
+						{canEdit && (
+							<button
+								onClick={handleSave}
+								id="save-mind-map"
+								className="mindmap-btn-head"
+							>
+								<FaRegSave />
+								<span>Lưu thay đổi</span>
+							</button>
+						)}
 
-						<button
-							onClick={handleShare}
-							id="share-mind-map"
-							className="mindmap-btn-head"
-						>
-							<FaShare />
-							<span>Chia sẻ</span>
-						</button>
+						{canEdit && (
+							<button
+								onClick={handleShare}
+								id="share-mind-map"
+								className="mindmap-btn-head"
+							>
+								<FaShare />
+								<span>Chia sẻ</span>
+							</button>
+						)}
 					</div>
 				</div>
 
@@ -174,11 +184,12 @@ function MindmapDetail() {
 				<div className="mindmap-page-decription-edit my-4">
 					<input
 						id="decription-mindmap"
-						onChange={event =>
-							handChangeInput(event, 'decription-mindmap')
-						}
+						onChange={event => {
+							setDecriptionMindMapShow(event.target.value);
+							setDecriptionMindMap(event.target.value);
+						}}
 						type="text"
-						value={decriptionMindMap}
+						value={decriptionMindMapShow}
 						placeholder="Mindmap decription"
 					/>
 				</div>
@@ -204,8 +215,8 @@ function MindmapDetail() {
 									id="private"
 									className="mr-1"
 									name="type"
-									onChange={() => setTypeShowShare('private')}
-									checked={typeShowShare === 'private'}
+									onChange={() => handleSetStatus('private')}
+									checked={statusMindmap === 'private'}
 									value="private"
 								/>
 								<label htmlFor="private">Riêng tư</label>
@@ -217,8 +228,8 @@ function MindmapDetail() {
 									id="public"
 									className="mr-1"
 									name="type"
-									onChange={() => setTypeShowShare('public')}
-									checked={typeShowShare === 'public'}
+									onChange={() => handleSetStatus('public')}
+									checked={statusMindmap === 'public'}
 									value="public"
 								/>
 								<label htmlFor="public">Công khai</label>
@@ -226,14 +237,14 @@ function MindmapDetail() {
 						</div>
 					</Modal.Header>
 					<Modal.Body>
-						{typeShowShare === 'private' && (
+						{statusMindmap === 'private' && (
 							<div>
 								Nếu chọn riêng tư, chỉ có bạn mới được quyền xem
 								Mindmap này
 							</div>
 						)}
 
-						{typeShowShare === 'public' && (
+						{statusMindmap === 'public' && (
 							<Fragment>
 								{/*  */}
 								{/* 1 Url */}
@@ -247,8 +258,7 @@ function MindmapDetail() {
 										placeholder="Username"
 										aria-label="Username"
 										aria-describedby="basic-addon1"
-										// value={'http://f8-mindmap.sanphamkythuat.online:880/my-mindmap/a51fd63b-2945-4008-b655-3d2d2536219d'}
-										value={dataShareMindmap.url}
+										value={urlShareMindMap}
 									/>
 								</InputGroup>
 								{/* 2 Title */}
@@ -327,15 +337,7 @@ function MindmapDetail() {
 				nodesApi={nodesApi}
 				edgesApi={edgesApi}
 			/>
-
-			{/* <Toast>
-				<Toast.Header>
-					<img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-					<strong className="me-auto">Bootstrap</strong>
-					<small>11 mins ago</small>
-				</Toast.Header>
-				<Toast.Body>Hello, world! This is a toast message.</Toast.Body>
-			</Toast> */}
+			<ToastContainer />
 		</div>
 	);
 }

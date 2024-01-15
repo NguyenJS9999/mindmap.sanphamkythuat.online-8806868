@@ -17,6 +17,7 @@ import './minmap-list.scss';
 const api = process.env.NEXT_PUBLIC_API;
 
 function MindmapListComponent({ session }) {
+
   const [loading, setLoading] = useState(false);
   const [mindmapList, setMindmapList] = useState([]);
 
@@ -24,6 +25,7 @@ function MindmapListComponent({ session }) {
   const [idRemove, setIdRemove] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const ownEmail = session?.user?.email;
   const router = useRouter();
 
   useLayoutEffect(() => {
@@ -84,7 +86,8 @@ function MindmapListComponent({ session }) {
     const dataParsed = await response.json();
     // console.log('getMindmaps ', dataParsed);
     if (response.status === 200) {
-      setMindmapList(dataParsed);
+      const ownMindmaps = dataParsed.filter((mindmap) => mindmap.userEmail === ownEmail);
+      setMindmapList(ownMindmaps);
     }
   }
 
@@ -136,7 +139,16 @@ function MindmapListComponent({ session }) {
                       <div>
                         <div><Link href={`/my-mindmap/${item.id}`}>{item?.name}</Link></div>
                         <div>{item?.description}</div>
-                        <div>ID: {item?.id}</div>
+                        <div>
+                          <div>
+                            ID: {item?.id}
+                          </div>
+                          <div>
+                            Email: {item.userEmail}
+                          </div>
+
+
+                        </div>
                       </div>
                     </td>
 

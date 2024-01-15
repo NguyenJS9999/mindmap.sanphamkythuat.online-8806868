@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, redirect } from "next/navigation";
-import { signOut,  } from "next-auth/react"; // useSession
+import { signOut } from "next-auth/react"; // useSession
 import './header.scss'
 import { Fragment, useEffect, useState } from "react";
 
