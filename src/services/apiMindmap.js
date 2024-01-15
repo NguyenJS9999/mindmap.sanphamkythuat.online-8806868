@@ -20,8 +20,8 @@ async function getListMindMap() {
 //
 
 // const API = process.env.API_MINDMAP;
-// const API = 'https://f86wpp-8080.csb.app';
-export const API = 'http://localhost:5000';
+const API = 'https://f86wpp-8080.csb.app';
+// export const API = 'http://localhost:5000';
 
 export const getListMindmaps = async (query = {}) => {
 	try {
