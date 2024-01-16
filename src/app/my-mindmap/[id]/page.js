@@ -23,6 +23,7 @@ async function MyMindmapUsePage({ params: { id } }) {
 
 	const getThisMindmap = async () => {
 		const response = await getOneMindmap(id);
+		// console.log('response', response);
 		if (response.status === 200) {
 			const dataParsed = await response.json();
 

@@ -20,7 +20,7 @@ async function getListMindMap() {
 //
 
 // const API = process.env.API_MINDMAP;
-const API = 'https://f86wpp-8080.csb.app';
+export const API = 'https://f86wpp-8080.csb.app';
 // export const API = 'http://localhost:5000';
 
 export const getListMindmaps = async (query = {}) => {
@@ -93,8 +93,7 @@ export async function updateOneMindMap(id, data) {
 			if (!response.ok) {
 				throw new Error(`Request been failed with status: ${response.status}`);
 			}
-
-			console.log('putMindMap response', response);
+			// console.log('putMindMap response', response);
 
 			return response;
 		} catch (error) {

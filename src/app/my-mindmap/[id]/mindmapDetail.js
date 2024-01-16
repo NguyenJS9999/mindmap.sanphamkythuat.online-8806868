@@ -67,7 +67,7 @@ function MindmapDetail({ caseNumb, canView, canEdit }) {
 	const getIDFromURL = () => {
 		const pathname = window.location.pathname;
 		const idThisMindmap = pathname.substring(pathname.lastIndexOf('/') + 1);
-		// console.log('Hàm id: ', idThisMindmap);
+		// console.log('id Từ Hàm : ', idThisMindmap);
 
 		setIdMindmap(idThisMindmap);
 		return idThisMindmap;
@@ -118,8 +118,10 @@ function MindmapDetail({ caseNumb, canView, canEdit }) {
 			// const dataParsed = await response.json();
 			// console.log('handleSave response', response);
 
-			if (response.status === 200) {
-				toast.success('Updated mindmap success!');
+			if (response?.ok === true) {
+				toast.success('Lưu mindmap thành công!');
+			} else {
+				toast.warning('Lưu mindmap thất bại!');
 			}
 		}
 	}
